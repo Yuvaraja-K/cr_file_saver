@@ -43,9 +43,20 @@ class FileSaverImpl: NSObject, FileSaverApi, UIDocumentPickerDelegate {
         // creating temp file that will be moved into destination folder later
         makeTempFile(sourceFileUrl: sourceFileUrl, destinationFileName: params.destinationFileName, completion)
         
-        guard let parentVC = (UIApplication.shared.delegate as! FlutterAppDelegate).window.rootViewController else {
-            completion(nil, FlutterError(code: "InvalidRootViewControllerException", message: "Could not retrieve root vc", details: nil))
-            return
+        guard
+        let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+        let window = scene.windows.first,
+        let parentVC = window.rootViewController
+        else {
+            completion(
+                 nil,
+             FlutterError(
+              code: "InvalidRootViewControllerException",
+              message: "Could not retrieve root view controller",
+              details: nil
+             )
+            )
+         return
         }
         
         var documentPickerVC: UIDocumentPickerViewController
